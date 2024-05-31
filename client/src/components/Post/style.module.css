@@ -17,7 +17,7 @@ div.post p.info{
     display: flex;
     gap: 10px;
 }
-div.post p.info a.autor{
+div.post p.info a.author{
     color: #333; 
 }
 div.post p.summary{
