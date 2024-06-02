@@ -4,8 +4,8 @@ import Header from "./components/Header";
 import Layout from "./components/Layout";
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import Login from "./pages/login";
+import Register from "./pages/register";
 function App() {
   return (
     <div className="App">
