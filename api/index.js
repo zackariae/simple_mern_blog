@@ -7,6 +7,10 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const UserModel = require('./models/User');
 
+const multer  = require('multer')
+const uploadMiddleware = multer({ dest: 'uploads/' });
+const fs = require('fs');
+const PostModel = require('./models/Post');
 // Initialize Express application
 const app = express();
 const port = 3000;
@@ -37,7 +41,7 @@ app.post('/register', async (req, res) => {
   } catch (error) {
     console.log("Registration error:", error);
     res.status(400).json(error);
-  }
+  }    
 });
 
 // Login endpoint
@@ -82,9 +86,40 @@ app.post('/logout', (req, res) => {
 
 
 app.get('/create', (req,res)=>{
-    res.body("wlcom in create");
+    res.body("welcome in create");
 });
 
+
+app.post('/post/create',uploadMiddleware.single('file'),async (req,res)=>{
+  const {originalname, path} = req.file;
+  const parts = originalname.split('.');
+  const ext = parts[parts.length-1];
+  const newPath = path+'.'+ext;
+  fs.renameSync(path, newPath);
+
+  const {title,summary,content} = req.body;
+  try {
+    const postDoc=await PostModel.create({
+      title,summary,content,cover:newPath
+    });
+    if(postDoc){
+      res.json(postDoc);
+    }
+    else{
+      console.log(postDoc)
+    }
+  } catch (error) {
+    console.log('Post not', error);
+  }
+ 
+
+
+  
+});
+app.get('/posts',async (req,res)=>{
+  const posts = await PostModel.find();
+  res.json(posts);
+});
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
