@@ -9,7 +9,6 @@ export default function Home() {
     if (res.ok) {
       const data = await res.json();
       setPosts(data);
-      console.log(data[0].title);
     }
   }
   useEffect(() => {

@@ -23,6 +23,7 @@ const db = 'mongodb+srv://sebaizakariae:It5bepwGGEZKGhNq@simpleblogcluster.t3zdi
 app.use(cors({ credentials: true, origin: 'http://localhost:5173' })); // Enable CORS for a specific origin
 app.use(express.json()); // Parse JSON request bodies
 app.use(cookieParser()); // Parse cookies
+app.use('/uploads', express.static(__dirname+'/uploads'));
 
 // Connect to MongoDB
 mongoose
@@ -96,29 +97,46 @@ app.post('/post/create',uploadMiddleware.single('file'),async (req,res)=>{
   const ext = parts[parts.length-1];
   const newPath = path+'.'+ext;
   fs.renameSync(path, newPath);
-
-  const {title,summary,content} = req.body;
-  try {
-    const postDoc=await PostModel.create({
-      title,summary,content,cover:newPath
-    });
-    if(postDoc){
-      res.json(postDoc);
-    }
-    else{
-      console.log(postDoc)
-    }
-  } catch (error) {
-    console.log('Post not', error);
+  const { token } = req.cookies;
+  
+  if (!token) {
+      return res.status(401).json({ error: 'Unauthorized' }); // Return a 401 error if no token is found
   }
- 
 
+
+  jwt.verify(token, secret,async (err, info) => {
+    if (err) {
+      return res.status(401).json({ error: 'Unauthorized' }); // Return a 401 error if token verification fails
+    }
+    const {title,summary,content} = req.body;
+    try {
+      const postDoc=await PostModel.create({
+        title,
+        summary,
+        content,
+        cover:newPath,
+        author:info.id,
+      });
+      if(postDoc){
+        res.json(postDoc);
+      }
+      else{
+        console.log(postDoc)
+      }
+    } catch (error) {
+      console.log('Post not', error);
+    }
+  });
 
   
 });
-app.get('/posts',async (req,res)=>{
-  const posts = await PostModel.find();
-  res.json(posts);
+app.get('/posts', async (req, res) => {
+  try {
+    const posts = await PostModel.find().populate('author', 'username -_id');
+    res.json(posts);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while fetching posts' });
+  }
 });
 // Start the server
 app.listen(port, () => {

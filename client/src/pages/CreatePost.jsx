@@ -34,6 +34,7 @@ export default function CreatePost() {
       const res = await fetch("http://localhost:3000/post/create", {
         method: "POST",
         body: data,
+        credentials: "include",
       });
 
       if (res.ok) {
