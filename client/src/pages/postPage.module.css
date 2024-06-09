@@ -1,0 +1,37 @@
+.page{
+
+}
+.page a {
+    color: #333;
+    text-decoration: underline;
+}
+.page h1{
+    text-align: center;
+    margin: 10px 0 5px;
+}
+.page time{
+    text-align: center;
+    display: block;
+    font-size: .7rem;
+    color: #aaa;
+}
+
+.author{
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: .7rem;
+    font-weight: bold;
+}
+.image{
+    max-height: 200px;
+    display: flex;
+    overflow: hidden;
+}
+.image img{
+    object-fit: cover;
+    object-position: center center;
+    width: 100%;
+}
+.content p{
+    line-height: 1.6rem;
+}

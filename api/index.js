@@ -132,12 +132,20 @@ app.post('/post/create',uploadMiddleware.single('file'),async (req,res)=>{
 });
 app.get('/posts', async (req, res) => {
   try {
-    const posts = await PostModel.find().populate('author', 'username -_id');
+    const posts = await PostModel.find().populate('author', 'username -_id').sort({createdAt:-1}).limit(20);
     res.json(posts);
   } catch (error) {
     res.status(500).json({ error: 'An error occurred while fetching posts' });
   }
 });
+
+app.get('/post/:id', async (req,res)=>{
+  const {id} = req.params;
+  const postDoc = await PostModel.findById(id).populate('author', 'username -_id');
+  res.json(postDoc);
+
+});
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

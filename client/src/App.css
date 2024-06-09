@@ -2,6 +2,8 @@
     box-sizing: border-box;
 }
 body{color: #222;}
+a{ text-decoration:  none;
+color: inherit;}
 img{
     max-width: 100%;
 }
