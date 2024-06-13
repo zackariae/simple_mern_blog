@@ -1,5 +1,4 @@
 .page{
-
 }
 .page a {
     color: #333;
@@ -35,3 +34,20 @@
 .content p{
     line-height: 1.6rem;
 }
+.editRow{
+    text-align: center;
+    margin-bottom: 15px;
+}
+.editRow .editBtn{
+    background-color: #333;
+    color: #ffff;
+    padding: 12px 24px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    border-radius: 8px;
+    width: 16%;
+    text-decoration: none;
+}
+.editRow .editBtn svg{ height: 20px;}
